@@ -24,7 +24,7 @@ pub(crate) struct CliArguments {
 
     /// Add additional logging, repeat flag for more detail
     #[arg(short, long, action = ArgAction::Count)]
-    verbose: u8,
+    pub verbose: u8,
 
     #[command(subcommand)]
     pub command: Option<Commands>,
