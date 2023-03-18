@@ -9,8 +9,8 @@ fn main() {
 
     let cli = CliArguments::parse();
     match &cli.command {
-        Some(Commands::Start(start)) => commands::start_command::start_server(start),
-        Some(Commands::Test(test)) => commands::test_command::test_server(test),
-        None => { println!("Please enter a valid command") }
+        Some(Commands::Start(start_args)) => commands::start_command::start_server(start_args),
+        Some(Commands::Test(test_args)) => commands::test_command::test_server(test_args),
+        None => println!("Please enter a valid command"),
     }
 }
