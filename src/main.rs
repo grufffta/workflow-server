@@ -8,6 +8,7 @@ use crate::commands::{
 };
 
 mod commands;
+mod threading;
 
 fn main() {
     println!("Workflow Engine: Server!");

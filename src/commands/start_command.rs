@@ -9,6 +9,7 @@ use crate::commands::validators::{
     is_valid_ip_address,
     port_in_range,
 };
+use crate::threading::ThreadPool;
 
 #[derive(Args)]
 pub(crate) struct StartCommandArgs {
@@ -24,12 +25,15 @@ pub(crate) struct StartCommandArgs {
 pub(crate) fn start_server(args: &StartCommandArgs, verbose: u8) {
     println!("\n  Starting server on {}:{} verbosity level {}", args.address, args.port, verbose);
     let bind_result = TcpListener::bind((args.address, args.port));
+    let pool = ThreadPool::new(8);
     match bind_result {
         Ok(listener) => {
             println!("  Listener Started\n");
             for incoming in listener.incoming() {
                 match incoming {
-                    Ok(stream) => handle_http_connection(stream, verbose),
+                    Ok(stream) => {
+                        pool.execute(move || handle_http_connection(stream, verbose));
+                    }
                     Err(e) => println!("Unable to establish stream: {}", e.to_string()),
                 }
             }
@@ -51,11 +55,11 @@ fn handle_http_connection(mut stream: TcpStream, verbose: u8) {
         println!("Requests {:#?}", request);
     }
 
-    let filename = get_template_filename(request);
+    let (filename, status) = get_template_filename(request);
 
     match fs::read_to_string(format!("www/{filename}")) {
         Ok(contents) => {
-            let response = get_response(contents);
+            let response = get_response(status, contents);
             if verbose > 0 {
                 println!("Response ------\n{:#}", response);
             }
@@ -66,21 +70,20 @@ fn handle_http_connection(mut stream: TcpStream, verbose: u8) {
 }
 
 /// gets the appropriate HTML file for a route
-fn get_template_filename(request: Vec<String>) -> &'static str {
-    return match request.first().unwrap() {
-        method => {
-            if method == "GET / HTTP/1.1" {
-                "up.html"
-            } else {
-                "404.html"
-            }
-        }
+fn get_template_filename(request: Vec<String>) -> (&'static str, &'static str) {
+    return match request
+        .first()
+        .unwrap()
+        .as_str()
+    {
+        "GET / HTTP/1.1" => ("up.html", "200 OK"),
+        _ => ("404.html", "404 NOT FOUND")
     };
 }
 
 /// formats a http response
-fn get_response(contents: String) -> String {
-    let status = "HTTP/1.1 200 OK";
+fn get_response(status: &str, contents: String) -> String {
+    let status = format!("HTTP/1.1 {}", status);
     let content_len = contents.len();
     let headers = format!("{status}\r\nContent-Length: {content_len}\r\n");
     format!("{headers}\r\n{contents}")
