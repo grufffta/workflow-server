@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use std::fs;
 
 use rcgen::Certificate;
@@ -32,4 +33,14 @@ fn write_pem(mut path: String, mut file: String, location: CertificateStoreType,
     path.push('/');
     path.push_str(file.as_str());
     fs::write(path.clone(), contents).unwrap_or_else(|_| panic!("unable to write file to {path}"));
+    println!("  created {} certificate: {path}", location)
+}
+
+impl Display for CertificateStoreType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+       match &self {
+           CertificateStoreType::Public => f.write_str("public"),
+           CertificateStoreType::Private => f.write_str("private"),
+       }
+    }
 }

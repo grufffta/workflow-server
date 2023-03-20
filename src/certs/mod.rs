@@ -25,10 +25,7 @@ pub(crate) fn create_ca(name: &Option<String>, alt_names: &[String], root_expiry
     let intermediate_cert = get_intermediate_certificate(name, alt_names, intermediate_expiry_days);
 
     write::certificate(CertificateType::RootCA, store_location.to_owned(), &root_cert, None);
-    println!("Certificate created for Root CA");
-
     write::certificate(CertificateType::IntermediateCA, store_location.to_owned(), &intermediate_cert, Some(&root_cert));
-    println!("Certificate created for Intermediate CA");
 }
 
 fn get_root_certificate(name: &Option<String>, alt_names: &[String], expiry_days: i64) -> Certificate {

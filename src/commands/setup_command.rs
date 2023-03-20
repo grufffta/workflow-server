@@ -13,7 +13,9 @@ pub(crate) struct SetupCommandArgs {
 #[derive(Subcommand)]
 pub(crate) enum SetupCommands {
     /// setup server host certificate
-    HostCert(CertificateCommandArgs)
+    HostCert(CertificateCommandArgs),
+    /// setup partner
+    Partner(PartnerCommandArgs),
 }
 
 #[derive(Args)]
@@ -38,9 +40,15 @@ pub(crate) struct CertificateCommandArgs {
     store_location: String,
 }
 
+#[derive(Args)]
+pub(crate) struct PartnerCommandArgs {
+
+}
+
 pub(crate) fn configure(args: &SetupCommandArgs) {
     match &args.command {
         Some(SetupCommands::HostCert(certificate_args)) => create_certificate(certificate_args),
+        Some(SetupCommands::Partner(partner_args)) => create_partner(partner_args),
         None => println!("Setup requires a valid subcommand"),
     }
 }
@@ -57,4 +65,8 @@ fn create_certificate(args: &CertificateCommandArgs) {
         subject_alt_names.push("localhost".to_string());
     }
     create_ca(&args.name, &subject_alt_names, args.root_expiry, args.intermediate_expiry, &args.store_location);
+}
+
+fn create_partner(args: &PartnerCommandArgs) {
+    todo!()
 }
