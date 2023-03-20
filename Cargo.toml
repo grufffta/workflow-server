@@ -1,7 +1,7 @@
 [package]
 name = "workflow-server"
 about = "Workflow automation server management CLI"
-authors = [ "Gruff <gruff@apily.co.uk>" ]
+authors = ["Gruff <gruff@apily.co.uk>"]
 version = "0.1.0"
 edition = "2021"
 
@@ -9,3 +9,5 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.1.8", features = ["derive", "cargo"] }
+rcgen = "0.10.0"
+time = "0.3.20"

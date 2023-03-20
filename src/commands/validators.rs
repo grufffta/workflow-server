@@ -2,6 +2,7 @@ use std::net::IpAddr;
 use std::ops::RangeInclusive;
 
 const PORT_RANGE: RangeInclusive<usize> = 1..=65535;
+
 /// validates the port is withing the range of valid TCP ports
 pub(crate) fn port_in_range(s: &str) -> Result<u16, String> {
     let port: usize = s

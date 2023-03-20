@@ -34,11 +34,11 @@ pub(crate) fn start_server(args: &StartCommandArgs, verbose: u8) {
                     Ok(stream) => {
                         pool.execute(move || handle_http_connection(stream, verbose));
                     }
-                    Err(e) => println!("Unable to establish stream: {}", e.to_string()),
+                    Err(e) => println!("Unable to establish stream: {}", e),
                 }
             }
         }
-        Err(e) => println!("\nUnable to start server: {}", e.to_string()),
+        Err(e) => println!("\nUnable to start server: {}", e),
     }
 }
 
@@ -63,9 +63,10 @@ fn handle_http_connection(mut stream: TcpStream, verbose: u8) {
             if verbose > 0 {
                 println!("Response ------\n{:#}", response);
             }
-            stream.write_all(response.as_bytes()).expect("Unable to write to stream")
+            stream.write_all(response.as_bytes()).expect("Unable to write to stream");
+            stream.flush().expect("Unable to flush stream");
         }
-        Err(e) => println!("Unable to read '{filename}': {}\n", e.to_string())
+        Err(e) => println!("Unable to read '{filename}': {}\n", e)
     }
 }
 

@@ -1,7 +1,3 @@
-pub(crate) mod start_command;
-pub(crate) mod test_command;
-pub(crate) mod validators;
-
 use std::path::PathBuf;
 
 use clap::{
@@ -10,6 +6,10 @@ use clap::{
     Subcommand,
 };
 
+pub(crate) mod start_command;
+pub(crate) mod test_command;
+pub(crate) mod validators;
+pub(crate) mod setup_command;
 
 #[derive(Parser)]
 /// Workflow engine command line interface.
@@ -34,6 +34,8 @@ pub(crate) struct CliArguments {
 pub(crate) enum Commands {
     /// Starts the workflow server
     Start(start_command::StartCommandArgs),
+    /// Perform server setup tasks and configuration
+    Setup(setup_command::SetupCommandArgs),
     /// Tests the server is up and network connections are available
     Test(test_command::TestCommandArgs),
 }
