@@ -1,0 +1,8 @@
+name = "Apily Workflow engine"
+log_level = 0
+
+[certificates]
+location = ".config/certs"
+
+[http]
+port = 5080
