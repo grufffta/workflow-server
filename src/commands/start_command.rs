@@ -5,10 +5,7 @@ use std::str::FromStr;
 
 use clap::Args;
 
-use crate::commands::validators::{
-    is_valid_ip_address,
-    port_in_range,
-};
+use crate::commands::validators::{is_valid_ip_address, port_in_range};
 use crate::threading::ThreadPool;
 
 #[derive(Args)]
@@ -23,7 +20,10 @@ pub(crate) struct StartCommandArgs {
 
 /// starts the server processes
 pub(crate) fn start_server(args: &StartCommandArgs, verbose: u8) {
-    println!("\n  Starting server on {}:{} verbosity level {}", args.address, args.port, verbose);
+    println!(
+        "\n  Starting server on {}:{} verbosity level {}",
+        args.address, args.port, verbose
+    );
     let bind_result = TcpListener::bind((args.address, args.port));
     let pool = ThreadPool::new(8);
     match bind_result {
@@ -63,22 +63,20 @@ fn handle_http_connection(mut stream: TcpStream, verbose: u8) {
             if verbose > 0 {
                 println!("Response ------\n{:#}", response);
             }
-            stream.write_all(response.as_bytes()).expect("Unable to write to stream");
+            stream
+                .write_all(response.as_bytes())
+                .expect("Unable to write to stream");
             stream.flush().expect("Unable to flush stream");
         }
-        Err(e) => println!("Unable to read '{filename}': {}\n", e)
+        Err(e) => println!("Unable to read '{filename}': {}\n", e),
     }
 }
 
 /// gets the appropriate HTML file for a route
 fn get_template_filename(request: Vec<String>) -> (&'static str, &'static str) {
-    return match request
-        .first()
-        .unwrap()
-        .as_str()
-    {
+    return match request.first().unwrap().as_str() {
         "GET / HTTP/1.1" => ("up.html", "200 OK"),
-        _ => ("404.html", "404 NOT FOUND")
+        _ => ("404.html", "404 NOT FOUND"),
     };
 }
 
@@ -89,4 +87,3 @@ fn get_response(status: &str, contents: String) -> String {
     let headers = format!("{status}\r\nContent-Length: {content_len}\r\n");
     format!("{headers}\r\n{contents}")
 }
-

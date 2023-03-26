@@ -10,4 +10,6 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.1.8", features = ["derive", "cargo"] }
 rcgen = "0.10.0"
+surrealdb = "1.0.0-beta.8"
 time = "0.3.20"
+toml = "0.7.3"

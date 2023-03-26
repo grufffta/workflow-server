@@ -3,16 +3,14 @@ extern crate core;
 use clap::Parser;
 
 use crate::commands::{
-    CliArguments,
+    setup_command::configure, start_command::start_server, test_command::test_server, CliArguments,
     Commands,
-    setup_command::configure,
-    start_command::start_server,
-    test_command::test_server,
 };
 
-mod commands;
-mod threading;
 mod certs;
+mod commands;
+mod db;
+mod threading;
 
 fn main() {
     println!("Workflow Engine: Server!");
@@ -25,3 +23,4 @@ fn main() {
         None => println!("Please enter a valid command"),
     }
 }
+
