@@ -2,6 +2,7 @@
 
 use anyhow::Result;
 
+mod certs;
 mod cli;
 mod config;
 

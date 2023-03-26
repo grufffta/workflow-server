@@ -10,5 +10,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.70"
 clap = { version = "4.1.11", features = ["derive", "cargo"] }
+rcgen = "0.10.0"
 serde = { version = "1.0.158", features = ["derive"] }
 toml = "0.7.3"
+time="0.3.20"

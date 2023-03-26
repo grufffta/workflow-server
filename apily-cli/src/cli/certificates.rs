@@ -1,5 +1,7 @@
 use std::path::{Path, PathBuf};
 
+use crate::{certs::create_ca, config::server::ServerConfig};
+
 use anyhow::{anyhow, Result};
 use clap::Args;
 
@@ -27,7 +29,15 @@ pub(crate) struct CertificateCommandArgs {
     force: bool,
 }
 impl CertificateCommandArgs {
-    pub(crate) fn create(&self, mut config: crate::config::server::ServerConfig) -> Result<()> {
+    /// Create Host Certificate Authority
+    ///
+    /// Creates a CA that will be used to issue certificates for this host.
+    /// Alternaticvely you can add a intermediate key and certificate to the
+    /// config store.
+    ///
+    /// ** Errors **
+    /// Will return an error if a intermediate key exists in the target directory.
+    pub(crate) fn create_host_ca(&self, mut config: ServerConfig) -> Result<()> {
         if Path::new(format!("{}/private/intermediate.key", self.store_location).as_str()).exists()
             && !self.force
         {
@@ -35,6 +45,20 @@ impl CertificateCommandArgs {
                 "certificate store already exists, use force to overwrite."
             ));
         }
-        Ok(())
+        let mut subject_alt_names = match &self.alt_names {
+            Some(name) => vec![name.clone()],
+            None => vec![],
+        };
+
+        if self.include_localhost {
+            subject_alt_names.push("localhost".to_string());
+        }
+        create_ca(
+            &self.name,
+            &subject_alt_names,
+            self.root_expiry,
+            self.intermediate_expiry,
+            &self.store_location,
+        )
     }
 }

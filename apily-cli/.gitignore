@@ -1,2 +1,2 @@
-./certs/private
+.config/certs/private
 /target

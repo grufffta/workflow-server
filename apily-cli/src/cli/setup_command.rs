@@ -30,7 +30,7 @@ pub(crate) struct ShowCommandArgs {}
 pub(crate) fn run(args: &SetupCommandArgs, config: ServerConfig) -> Result<()> {
     match &args.command {
         Some(SetupCommands::HostCert(certificate_args)) => {
-            certificate_args.create(config);
+            certificate_args.create_host_ca(config);
             Ok(())
         }
         Some(SetupCommands::Show(_)) => {
