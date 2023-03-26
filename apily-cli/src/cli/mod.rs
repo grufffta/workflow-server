@@ -1,7 +1,13 @@
-use std::path::{Path, PathBuf};
+mod certificates;
+mod setup_command;
 
-use anyhow::{Context, Result};
-use clap::{ArgAction, Parser};
+use std::{
+    error::Error,
+    path::{Path, PathBuf},
+};
+
+use anyhow::{anyhow, Context, Result};
+use clap::{ArgAction, Parser, Subcommand};
 
 use crate::config;
 
@@ -23,15 +29,29 @@ struct CliArguments {
 
     /// Add additional logging, repeat flag for more detail
     #[arg(short, long, action = ArgAction::Count)]
-    pub verbose: u8,
+    verbose: u8,
+
+    #[command(subcommand)]
+    command: Option<Commands>,
+}
+
+#[derive(Subcommand)]
+pub(crate) enum Commands {
+    Setup(setup_command::SetupCommandArgs),
 }
 
 pub(crate) fn run() -> Result<()> {
     let cli: CliArguments = CliArguments::parse();
-    let config =
-        config::load(cli.name, cli.verbose, match cli.config_file {
+    let config = config::load(
+        cli.name,
+        cli.verbose,
+        match cli.config_file {
             Some(f) => f,
             None => PathBuf::from(".config/app.toml"),
-        })?;
-    Ok(())
+        },
+    )?;
+    match &cli.command {
+        Some(Commands::Setup(setup_args)) => setup_command::run(setup_args, config),
+        None => Err(anyhow!("please enter a valid command")),
+    }
 }

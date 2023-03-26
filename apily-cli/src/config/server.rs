@@ -41,11 +41,9 @@ impl Default for ServerConfig {
         Self {
             name: None,
             certificates: CertificateAuthorityConfig {
-                location: PathBuf::from(r".config/certs")
+                location: PathBuf::from(format!("{}/certs", DEFAULT_CONFIG_LOCATION)),
             },
-            http: HttpConfig {
-                port: 5080
-            },
+            http: HttpConfig { port: 5080 },
             log_level: 0,
         }
     }

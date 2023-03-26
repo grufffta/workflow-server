@@ -1,26 +1,27 @@
-use std::{fs, result};
 use std::error::Error;
 use std::fmt::format;
 use std::path::{Path, PathBuf};
+use std::{fs, result};
 
 use anyhow::{Context, Result};
 use clap::builder::TypedValueParser;
 
 use crate::config::server::ServerConfig;
 
-mod server;
+pub(crate) mod server;
 
 /// Loads the server configuration from the app config file
 pub(super) fn load(name: Option<String>, verbosity: u8, path: PathBuf) -> Result<ServerConfig> {
     match Path::exists(path.as_path()) {
-        true => { open(&path) }
-        false => {
-            save(ServerConfig {
+        true => open(&path),
+        false => save(
+            ServerConfig {
                 name,
                 log_level: verbosity,
                 ..Default::default()
-            }, &path)
-        }
+            },
+            &path,
+        ),
     }
 }
 
@@ -30,8 +31,7 @@ fn save(config: ServerConfig, path: &PathBuf) -> Result<ServerConfig> {
 
     fs::create_dir_all(path.parent().unwrap())?;
 
-    fs::write(path, toml)
-        .with_context(|| format!("Unable to write {}", path.display()))?;
+    fs::write(path, toml).with_context(|| format!("Unable to write {}", path.display()))?;
 
     Ok(config)
 }
