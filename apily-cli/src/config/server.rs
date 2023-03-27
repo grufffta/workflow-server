@@ -1,9 +1,10 @@
-use std::path::PathBuf;
-
 use serde::{Deserialize, Serialize};
+use std::{net::IpAddr, path::PathBuf, str::FromStr};
 
 /// default location for application configuration
-const DEFAULT_CONFIG_LOCATION: &str = ".config/";
+pub(crate) const DEFAULT_CONFIG_LOCATION: &str = ".config/";
+pub(crate) const DEFAULT_HTTP_PORT: u16 = 5080;
+pub(crate) const DEFAULT_HTTP_ADDRESS: &str = "0.0.0.0";
 
 /// Represents the server configuration
 #[derive(Serialize, Deserialize, Debug)]
@@ -25,6 +26,8 @@ pub(crate) struct ServerConfig {
 /// Represents the server http configuration
 #[derive(Serialize, Deserialize, Debug)]
 pub(crate) struct HttpConfig {
+    /// http listening address, defaults to all IPs
+    address: IpAddr,
     /// http listening port
     port: u16,
 }
@@ -43,7 +46,10 @@ impl Default for ServerConfig {
             certificates: CertificateAuthorityConfig {
                 location: PathBuf::from(format!("{}/certs", DEFAULT_CONFIG_LOCATION)),
             },
-            http: HttpConfig { port: 5080 },
+            http: HttpConfig {
+                address: IpAddr::from_str(DEFAULT_HTTP_ADDRESS).unwrap(),
+                port: DEFAULT_HTTP_PORT,
+            },
             log_level: 0,
         }
     }

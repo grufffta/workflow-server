@@ -1,10 +1,9 @@
 mod params;
 mod write;
 
+use self::params::get_ca_parameters;
 use anyhow::{Context, Result};
 use rcgen::Certificate;
-
-use self::params::get_ca_parameters;
 
 enum CertificateType {
     /// Root Certificate Authority

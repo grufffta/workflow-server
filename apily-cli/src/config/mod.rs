@@ -1,12 +1,13 @@
-use std::error::Error;
-use std::fmt::format;
-use std::path::{Path, PathBuf};
-use std::{fs, result};
-
+use crate::config::server::ServerConfig;
 use anyhow::{Context, Result};
 use clap::builder::TypedValueParser;
-
-use crate::config::server::ServerConfig;
+use std::{
+    error::Error,
+    fmt::format,
+    fs,
+    path::{Path, PathBuf},
+    result,
+};
 
 pub(crate) mod server;
 

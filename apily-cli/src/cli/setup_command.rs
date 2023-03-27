@@ -1,12 +1,8 @@
-use std::error::Error;
-
-use clap::{Args, Subcommand};
-
-use anyhow::{anyhow, Context, Result};
-
-use crate::config::server::ServerConfig;
-
 use super::certificates::CertificateCommandArgs;
+use super::config::server::ServerConfig;
+use anyhow::{anyhow, Context, Result};
+use clap::{Args, Subcommand};
+use std::error::Error;
 
 /// server setup
 #[derive(Args)]

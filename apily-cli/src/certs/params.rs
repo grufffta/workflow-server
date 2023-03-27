@@ -1,9 +1,8 @@
-use std::ops::Add;
-
 use rcgen::{
     BasicConstraints, CertificateParams, DistinguishedName, DnType, IsCa, KeyPair,
     PKCS_ECDSA_P256_SHA256,
 };
+use std::ops::Add;
 use time::OffsetDateTime;
 
 /// Creates the parameters used to generate a certificate

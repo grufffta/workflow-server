@@ -1,11 +1,9 @@
+use super::{CertificateStoreType, CertificateType};
+use rcgen::Certificate;
 use std::{
     fmt::{Display, Formatter},
     fs,
 };
-
-use rcgen::Certificate;
-
-use super::{CertificateStoreType, CertificateType};
 
 pub(super) fn certificate(
     cert_type: CertificateType,
