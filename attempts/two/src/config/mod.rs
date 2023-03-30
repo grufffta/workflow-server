@@ -26,7 +26,7 @@ pub(super) fn load(name: Option<String>, verbosity: u8, path: PathBuf) -> Result
     }
 }
 
-fn save(config: ServerConfig, path: &PathBuf) -> Result<ServerConfig> {
+pub(super) fn save(config: ServerConfig, path: &PathBuf) -> Result<ServerConfig> {
     let toml = toml::to_string(&config)
         .with_context(|| format!("unable to serialize config: {:?}", config))?;
 

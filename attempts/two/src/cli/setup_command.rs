@@ -1,5 +1,5 @@
 use super::certificates::CertificateCommandArgs;
-use super::config::server::ServerConfig;
+use crate::config::server::ServerConfig;
 use anyhow::{anyhow, Context, Result};
 use clap::{Args, Subcommand};
 use std::error::Error;

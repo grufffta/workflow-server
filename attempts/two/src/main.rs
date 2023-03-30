@@ -5,7 +5,8 @@ mod config;
 
 use anyhow::Result;
 
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
     println!("Apily CLI");
-    cli::run()
+    cli::run().await
 }

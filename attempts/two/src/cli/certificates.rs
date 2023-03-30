@@ -1,4 +1,7 @@
-use crate::{certs::create_ca, config::server::ServerConfig};
+use crate::{
+    certs::create_ca,
+    config::server::{ServerConfig, DEFAULT_CERT_LOCATION},
+};
 use anyhow::{anyhow, Result};
 use clap::Args;
 use std::path::{Path, PathBuf};
@@ -23,7 +26,7 @@ pub(crate) struct CertificateCommandArgs {
     #[arg(short = 'i', long, default_value_t = DEFAULT_INTERMEDIATECA_EXPIRY, value_name = "DAYS")]
     intermediate_expiry: i64,
     /// path to store certificate too
-    #[arg(long, default_value_t = String::from(".config/certs"))]
+    #[arg(long, default_value_t = DEFAULT_CERT_LOCATION.to_string())]
     store_location: String,
     /// force overwriting the certificate store
     #[arg(long, default_value_t = false)]
