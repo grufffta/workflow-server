@@ -1,6 +1,0 @@
-[Server]
-name = "Apily Workflow Engine"
-certificate_store_location = ".certs/"
-
-[AS2]
-server_id = "workflow-test"
