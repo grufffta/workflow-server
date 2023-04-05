@@ -100,6 +100,9 @@ macro_rules! merge_config {
     ($config:expr, $params:expr) => {{
         let mut config: ServerConfig = $config;
         update_if_changed![config.name, $params.name];
+        update_if_changed![config.certificates.location, $params.certificates.location];
+        update_if_changed![config.http.address, $params.http.address];
+        update_if_changed![config.http.port, $params.http.port];
         config
     }};
 }

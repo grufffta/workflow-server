@@ -1,3 +1,5 @@
+use std::fs;
+
 use crate::cli::CliCommandResult;
 
 use self::certificates::CertificateCommandArgs;
@@ -39,7 +41,10 @@ impl CliCommand for SetupCommandArgs {
 }
 
 #[derive(Args)]
-struct ShowCommandArgs {}
+struct ShowCommandArgs {
+    #[arg(long, short = 'c', default_value_t = false)]
+    host_cert: bool,
+}
 
 impl CliCommand for ShowCommandArgs {
     fn parse(&self, cli: &CLiArguments) -> (&dyn CliCommand, ServerConfig) {
@@ -54,7 +59,23 @@ impl CliCommand for ShowCommandArgs {
     }
 
     fn run(&self, config: &ServerConfig) -> Result<CliCommandResult> {
-        println!("{:#?}", config);
+        match self.host_cert {
+            true => {
+                let root_cert = fs::read_to_string(format!(
+                    "{}/public/root.pub",
+                    config.certificates.location
+                ))?;
+                let host_cert = fs::read_to_string(format!(
+                    "{}/public/root.pub",
+                    config.certificates.location
+                ))?;
+                println!(
+                    "\n----- ROOT CA CERTIFICATE -----\n\n{}\n----- HOST CERTIFICATE -----\n\n{}\n",
+                    root_cert, host_cert
+                );
+            }
+            false => println!("{:#?}", config),
+        }
         Ok(CliCommandResult::Result(()))
     }
 }
