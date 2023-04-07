@@ -1,0 +1,18 @@
+[package]
+name = "cli"
+version = "0.1.0"
+authors = ["Gruff <gruff@apily.co.uk>"]
+edition = "2021"
+description = "workflow automation server for electronic file exchange"
+license = "MIT"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.70"
+certs = { path = "../lib/certs" }
+server = { path = "../lib/server" }
+utils = { path="../lib/utils/"}
+clap = { version = "4.2.1", features = ["derive", "cargo"] }
+serde = { version = "1.0.159", features = ["derive"] }
+tokio = { version = "1.27.0", features = ["full"] }
+toml = "0.7.3"

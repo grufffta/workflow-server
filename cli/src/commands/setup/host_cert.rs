@@ -1,17 +1,15 @@
+use anyhow::{anyhow, Result};
+use certs::{
+    ca::create_cert_authority,
+    config::{CertificateAuthorityConfig, DEFAULT_CA_LOCATION},
+};
+use clap::Args;
 use std::{io, path::Path};
 
 use crate::{
-    certs::create_cert_authority,
-    cli::{
-        config::{
-            CertificateAuthorityConfig, ServerConfig, DEFAULT_CERT_STORE_LOCATION,
-            DEFAULT_INTCA_EXPIRY, DEFAULT_ROOTCA_EXPIRY,
-        },
-        CliCommand, CliCommandResult,
-    },
+    commands::{CliArgs, CliCommand, CliCommandResult},
+    config::AppConfig,
 };
-use anyhow::{anyhow, Context, Result};
-use clap::{command, ArgAction, Args, Parser, Subcommand};
 
 #[derive(Args)]
 pub(super) struct CertificateCommandArgs {
@@ -23,13 +21,13 @@ pub(super) struct CertificateCommandArgs {
     #[arg(short = 'l', long, default_value_t = false)]
     include_localhost: bool,
     /// root certificate expiry, in days
-    #[arg(short = 'r', long, default_value_t = DEFAULT_ROOTCA_EXPIRY, value_name = "DAYS")]
+    #[arg(short = 'r', long, default_value_t = 7300, value_name = "DAYS")]
     root_expiry: i64,
     /// intermediate certificate expiry, in days
-    #[arg(short = 'i', long, default_value_t = DEFAULT_INTCA_EXPIRY, value_name = "DAYS")]
+    #[arg(short = 'i', long, default_value_t = 3650, value_name = "DAYS")]
     intermediate_expiry: i64,
     /// path to store certificate too
-    #[arg(long, default_value_t = DEFAULT_CERT_STORE_LOCATION.to_string())]
+    #[arg(long, default_value_t = DEFAULT_CA_LOCATION.to_string())]
     store_location: String,
     /// force overwriting the certificate store
     #[arg(long, default_value_t = false)]
@@ -37,13 +35,10 @@ pub(super) struct CertificateCommandArgs {
 }
 
 impl CliCommand for CertificateCommandArgs {
-    fn parse(
-        &self,
-        cli: &crate::cli::CLiArguments,
-    ) -> (&dyn CliCommand, crate::cli::config::ServerConfig) {
+    fn parse(&self, cli: &CliArgs) -> (&dyn CliCommand, AppConfig) {
         (
             self,
-            ServerConfig {
+            AppConfig {
                 name: cli.name.clone(),
                 log_level: cli.verbose,
                 certificates: CertificateAuthorityConfig {
@@ -54,7 +49,7 @@ impl CliCommand for CertificateCommandArgs {
         )
     }
 
-    fn run(&self, config: &ServerConfig) -> Result<CliCommandResult> {
+    fn run(&self, config: &AppConfig) -> Result<CliCommandResult> {
         if cert_store_exists(&config.certificates.location)? && !self.force {
             return Err(anyhow!(
                 "certificate store already exists, use force to overwrite."

@@ -1,20 +1,23 @@
-use std::net::{IpAddr, SocketAddr};
-
 use axum::{response::Html, routing::get, Router};
+use std::net::{IpAddr, SocketAddr};
+#[allow(unused_imports)]
 use tokio::signal::{self, unix::signal};
 
-pub(super) async fn launch(address: IpAddr, port: u16) {
+pub mod config;
+
+pub async fn launch(address: IpAddr, port: u16) {
     let app: Router = Router::new()
         .route(
             "/",
-            get(|| async { Html(include_str!("../../assets/up.html")) }),
+            get(|| async { Html(include_str!("../assets/up.html")) }),
         )
-        .fallback(|| async { Html(include_str!("../../assets/404.html")) });
+        .fallback(|| async { Html(include_str!("../assets/404.html")) });
 
     axum::Server::bind(&SocketAddr::new(address, port))
         .serve(app.into_make_service())
         .with_graceful_shutdown(shutdown_hook())
-        .await;
+        .await
+        .unwrap();
 }
 
 fn shutdown() {

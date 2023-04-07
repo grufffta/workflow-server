@@ -1,11 +1,12 @@
-use super::{CertificateStoreType, CertificateType};
-use rcgen::Certificate;
 use std::{
     fmt::{Display, Formatter},
     fs,
 };
 
-pub(super) fn certificate(
+use crate::{CertificateStoreType, CertificateType};
+use rcgen::Certificate;
+
+pub(crate) fn certificate(
     cert_type: CertificateType,
     path: String,
     cert: &Certificate,

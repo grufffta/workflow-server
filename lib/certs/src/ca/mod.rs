@@ -1,25 +1,13 @@
-use self::params::get_ca_parameters;
+mod params;
+
 use anyhow::{Context, Result};
 use rcgen::Certificate;
 
-mod params;
-mod write;
+use crate::{write, CertificateType};
 
-enum CertificateType {
-    /// Root Certification Authority
-    RootCA,
-    /// Intermediate Certification Authority
-    IntermediateCA,
-}
+use self::params::get_ca_parameters;
 
-enum CertificateStoreType {
-    /// Represents a public certificate
-    Public,
-    /// Represents a private certificate
-    Private,
-}
-
-pub(crate) fn create_cert_authority(
+pub fn create_cert_authority(
     name: &Option<String>,
     alt_names: &[String],
     root_expiry_days: i64,

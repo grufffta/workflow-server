@@ -1,24 +1,8 @@
-use rcgen::{
-    BasicConstraints, CertificateParams, DistinguishedName, DnType, IsCa, KeyPair,
-    PKCS_ECDSA_P256_SHA256,
-};
+use rcgen::{CertificateParams, DistinguishedName, DnType, KeyPair, PKCS_ECDSA_P256_SHA256};
 use std::ops::Add;
 use time::OffsetDateTime;
 
-/// Creates the parameters used to generate a certificate
-pub(crate) fn get_ca_parameters(
-    name: String,
-    alt_names: Vec<String>,
-    expiry_days: i64,
-) -> CertificateParams {
-    let mut params = get_cert_parameters(name, alt_names, expiry_days);
-    {
-        params.is_ca = IsCa::Ca(BasicConstraints::Unconstrained);
-    }
-    params
-}
-
-fn get_cert_parameters(
+pub(crate) fn get_cert_parameters(
     name: String,
     alt_names: Vec<String>,
     expiry_days: i64,
