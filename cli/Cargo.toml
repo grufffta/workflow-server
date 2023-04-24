@@ -10,6 +10,7 @@ license = "MIT"
 [dependencies]
 anyhow = "1.0.70"
 certs = { path = "../lib/certs" }
+model = { path = "../lib/model/" }
 server = { path = "../lib/server" }
 utils = { path="../lib/utils/"}
 clap = { version = "4.2.1", features = ["derive", "cargo"] }
