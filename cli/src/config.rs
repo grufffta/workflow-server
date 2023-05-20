@@ -4,7 +4,7 @@ use std::{fs, path::Path};
 use utils::update_if_changed;
 
 use certs::config::CertificateAuthorityConfig;
-use server::config::HttpConfig;
+use server::config::{ContentStoreConfig, HttpConfig};
 
 const CONFIG_LOCATION: &str = ".config/app.toml";
 
@@ -16,6 +16,8 @@ pub struct AppConfig {
     pub certificates: CertificateAuthorityConfig,
     /// http server configuration
     pub http: HttpConfig,
+    /// configures the content store for the server
+    pub content: ContentStoreConfig,
     /// application logging level
     /// * 0 : No Logging
     /// * 1 : Normal Logging
@@ -32,6 +34,7 @@ impl Default for AppConfig {
             name: None,
             certificates: CertificateAuthorityConfig::default(),
             http: HttpConfig::default(),
+            content: ContentStoreConfig::default(),
             log_level: 0,
             config_location: CONFIG_LOCATION.to_string(),
         }
@@ -44,6 +47,7 @@ pub(super) fn merge(filename: &Path, config: AppConfig) -> Result<AppConfig> {
     update_if_changed!(stored.name, config.name);
     update_if_changed!(stored.http.address, config.http.address);
     update_if_changed!(stored.http.port, config.http.port);
+    update_if_changed!(stored.content.base_path, config.content.base_path);
     update_if_changed!(stored.certificates.location, config.certificates.location);
     Ok(stored)
 }
